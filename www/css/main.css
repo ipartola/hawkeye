@@ -1,0 +1,55 @@
+
+html, body {
+    height: 100%;
+}
+
+#hawkeye-container {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    width: 100%;
+    height: 96%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+}
+
+#hawkeye-carousel {
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
+}
+
+#hawkeye-carousel .carousel-inner,
+#hawkeye-carousel .carousel-inner .item {
+    height: 100%;
+}
+
+#hawkeye-carousel .alert {
+    height: 100%;
+    text-align: center;
+    padding-top: 4em;
+    min-height: 320px;
+}
+
+.mjpeg {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    max-height: 100%;
+
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -o-border-radius: 10px;
+    -ms-border-radius: 10px;
+}
+
+#hawkeye-carousel .carousel-control {
+    background: none;
+}

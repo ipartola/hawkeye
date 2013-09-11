@@ -1,0 +1,12 @@
+/var/log/hawkeye.log {
+        daily
+        missingok
+        rotate 14
+        compress
+        delaycompress
+        notifempty
+        sharedscripts
+        postrotate
+            /etc/init.d/hawkeye restart > /dev/null
+        endscript
+}

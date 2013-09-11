@@ -1,0 +1,13 @@
+*.o
+src/hawkeye
+*.lo
+*.out
+
+debian/hawkeye.debhelper.log
+debian/hawkeye.postinst.debhelper
+debian/hawkeye.postrm.debhelper
+debian/hawkeye.prerm.debhelper
+debian/hawkeye.substvars
+debian/hawkeye/
+debian/files
+

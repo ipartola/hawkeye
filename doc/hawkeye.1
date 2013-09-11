@@ -1,0 +1,145 @@
+.\" Manpage for hawkeye.
+.\" Contact igor@igorpartola.com to correct errors or typos.
+.TH man 1 "14 Aug 2013" "0.1" "hawkeye man page"
+
+.SH NAME
+hawkeye \- USB webcam MJPEG streaming server
+
+.SH SYNOPSIS
+
+Usage: hawkeye [-d] [-c config] [-H host] [-p port] [-w www-root] [-P pidfile]
+       [-l logfile] [-u user] [-g group] [-F fps] [-D video-devices] [-W width]
+       [-G height] [-j jpeg-quality] [-L log-level] [-f format] [-A user:pass]
+.br
+Usage: hawkeye [--daemon] [--config=path] [--host=host] [--port=port]
+       [--www-root=path] [--pid=path] [--log=path] [--user=user] [--group=group]
+       [--fps=fps][--devices=video-devices] [--width=width] [--height=height]
+       [--quality=quality] [--log-level=log-level] [--format=format]
+       [--auth=user:pass]
+.br
+hawkeye [-v]
+.br
+hawkeye [-h]
+
+.SH DESCRIPTION
+hawkeye is an video streamer that will serve video from a USB webcam over
+HTTP as an MJPEG stream. It has very basic HTTP functionality but is able
+to password protect the video streams and use HTTPS to encrypt all
+communication between the client and the server.
+
+.SH OPTIONS
+hawkeye takes a number of options which can also be configured via the config
+file. See the hawkeye.conf file in your docs directory for additional
+configuration parameters. Note that all arguments are optional and sane
+defaults will be used if not supplied.
+
+.TP
+\fB-c \fIpath\fB | --config\fI=path\fR
+Path to the configuration file to use.
+
+.TP
+\fB-d\fR
+If supplied, hawkeye will fork into the background.
+
+.TP
+\fB-H \fIhost\fB | --host\fI=host\fR
+The host/IP address to listen on. The default is "localhost".
+
+.TP
+\fB-p \fIport\fB | --port\fI=port\fR
+Port number of the server. Default is 8000.
+
+.TP
+\fB-w \fIpath\fB | --www-root\fI=path\fR
+Path to the static files you want hawkeye to serve. Default is "", which
+means serving static files is disabled.
+
+.TP
+\fB-P \fIpath\fB | --pid\fI=path\fR
+Path to pidfile. If left out of the command line options and the config file,
+PID will not be written to a file.
+
+.TP
+\fB-l \fIpath\fB | --log\fI=path\fR
+The location of hawkeye's log file. If not supplied, stdout will be used.
+
+.TP
+\fB-u \fIuser\fB | --user\fI=user\fR
+Normally, hawkeye will start as root, but can drop privileges once it has
+initialized. This option specifies the user. Note that you must also specify
+the --group option for privileges to be dropped.
+
+.TP
+\fB-u \fIuser\fB | --user\fI=user\fR
+Normally, hawkeye will start as root, but can drop privileges once it has
+initialized. This option specifies the group. Note that you must also specify
+the --user option for privileges to be dropped.
+
+.TP
+\fB-F \fIfps\fB | --fps\fI=fps\fR
+Desired framerate. Default is 5.
+
+.TP
+\fB-D \fIvideo-device\fB | --device\fI=video-device\fR
+Video input device to use. Default is /dev/video0.
+
+.TP
+\fB-W \fIwidth\fB | --width\fI=width\fR
+Width of the video input. Default is 640.
+
+.TP
+\fB-G \fIheight\fB | --height\fI=height\fR
+Height of the video input. Default is 480.
+
+.TP
+\fB-j \fIjpeg-quality\fB | --quality\fI=quality\fR
+JPEG quality if using the YUV format. Range is from 1 to 100. Default is 80.
+
+.TP
+\fB-L \fIlog-level\fB | --log-level\fI=log-level\fR
+Log level to use. Default is "info". Possible values are debug, info,
+warning,and error.
+
+.TP
+\fB-f \fIformat\fB | --format\fI=format\fR
+The input format to use. Default is "mjpeg". Possible values are "mjpeg",
+and "yuv". MJPEG is preferred. If your camera does not support it,
+YUV can be used, but it will be CPU-bound as it has to compress raw YUV
+frames to JPEG. If you specify "mjpeg" and the input does not support it,
+the input will fall back to YUV.
+
+.TP
+\fB-A \fIuser:pass\fB | --auth\fI=user:pass\fR
+Basic HTTP username and password. If you are using the "cert" and "key"
+option for securing the HTTP connection using SSL, you may set the username
+and the password using this option. Note that without SSL the values of the
+username and the password are visible to anyone and should not be set.
+
+.TP
+\fB-C \fIcert-file\fB | --cert\fI=cert-file\fR
+Path to the public SSL certificate to use for the server. If you specify
+this option, you must also specify the SSL private key (-k or --key).
+
+.TP
+\fB-k \fIkey-file\fB | --key\fI=key-file\fR
+Path to the SSL private key to use for the server. If you specify
+this option, you must also specify the public certificate (-C or --cert).
+
+.TP
+\fB-v\fR
+Print version of the hawkeye executable.
+
+.TP
+\fB-h\fR
+Prints the help info for this executable.
+
+.SH CONFIGURATION FILE
+hawkeye supports an optional configuration file. If it is not already
+installed at /etc/hawkeye.conf, you can find the sample at
+/usr/share/doc/hawkeye/hawkeye.conf.
+
+.SH BUGS
+No known bugs.
+
+.SH AUTHOR
+Igor Partola (igor@igorpartola.com)

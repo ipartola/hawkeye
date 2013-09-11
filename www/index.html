@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hawkeye</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+
+        <link rel="icon" href="img/favicon.ico" />
+        <link rel="apple-touch-icon" href="img/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="img/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="img/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="img/apple-touch-icon-retina.png" />
+
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/main.css" />
+
+        <script src="js/jquery.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+
+        <script>
+            // CUSTOMIZE THESE FOR YOUR SETUP:
+
+            HAWKEYE_STREAMS = [
+                '/'
+            ];
+
+            // You can add multiple stream locations as below.
+            // NOTE: each stream location may contain multiple streams/cameras.
+
+            /*
+            
+            HAWKEYE_STREAMS = [
+                'https://example.com/hawkeye-1/',
+                'https://example.org/hawkeye-2/'
+            ];
+            
+            */
+
+        </script>
+        <script src="js/main.js"></script>
+    </head>
+
+    <body>
+        <div id="hawkeye-container" class="container">
+            <div id="hawkeye-carousel" class="carousel slide" data-interval="false">
+                <ol class="carousel-indicators"></ol>
+                <div class="carousel-inner"></div>
+                <a class="left carousel-control" href="#hawkeye-carousel" data-slide="prev"><span class="icon-prev"></span></a>
+                <a class="right carousel-control" href="#hawkeye-carousel" data-slide="next"><span class="icon-next"></span></a>
+            </div>
+        </div>
+    </body>
+</html>
