@@ -21,8 +21,8 @@
 #include "daemon.h"
 #include "settings.h"
 
-#define FRAME_BUFFER_LENGTH 16
-#define MIN_HTTP_TIMEOUT 0.01
+#define FRAME_BUFFER_LENGTH 8
+#define MIN_HTTP_TIMEOUT 0.05
 
 static int is_running = 1;
 

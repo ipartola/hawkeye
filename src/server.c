@@ -499,9 +499,7 @@ void serve_clients(struct server *s, struct frame_buffers *fbs, double timeout) 
     struct timeval timeout_tv;
     double now;
 
-    int selects_left = 5;
-
-    while (timeout > 0 && selects_left > 0) {
+    while (timeout > 0) {
         FD_ZERO(&read_set);
         FD_ZERO(&write_set);
 
@@ -571,7 +569,6 @@ void serve_clients(struct server *s, struct frame_buffers *fbs, double timeout) 
         }
 
         timeout -= gettime() - now;
-        selects_left--;
     }
 }
 
