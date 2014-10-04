@@ -156,8 +156,9 @@ void add_config_item(struct config *con, signed char short_name, char *long_name
     c->long_option.has_arg = (dst_type != CONFIG_BOOL);
     c->long_option.flag = NULL;
     c->long_option.val = c->short_name;
-    
-    *c->dst = NULL;
+
+    // Fix segfault issue #1
+    //*c->dst = NULL;
 
     con->count++;
     
