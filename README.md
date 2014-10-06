@@ -1,6 +1,6 @@
 ## Hawkeye
 
-Hawkeye is a simple, robust, easy to use USB webcam streaming web server. It is designed to be usable on local networks as well as the Internet, supporting HTTPS and Basic Authentication. It comes with an HTML video stream viewer optimized for desktop and mobile usage. Lastly, Hawkeye supports multiple webcams.
+Hawkeye is a simple, robust, easy to use USB webcam streaming web server which uses MJPEG as the video codec. It is designed to be usable on local networks as well as the Internet, supporting HTTPS and Basic Authentication. It comes with an HTML video stream viewer optimized for desktop and mobile usage. Lastly, Hawkeye supports multiple webcams.
 
 Hawkeye was built to work on low power devices such as the Raspberry Pi but will work equally well on desktops and laptops alike.
 
@@ -17,7 +17,7 @@ If you already have a webcam connected, Hawkeye will start listening on localhos
 
 If you want to build Hawkeye from source:
 
-    sudo apt-get install build-essential debhelper libv4l-dev libjpeg8-dev libssl-dev
+    sudo apt-get install build-essential debhelper libv4l-dev libjpeg8-dev libssl-dev git
     git clone git@github.com:ipartola/hawkeye.git
     cd hawkeye/
     make
@@ -25,7 +25,7 @@ If you want to build Hawkeye from source:
 
 If you want to roll your own .deb package:
 
-    sudo apt-get install build-essential debhelper libv4l-dev libjpeg8-dev libssl-dev
+    sudo apt-get install build-essential debhelper libv4l-dev libjpeg8-dev libssl-dev git devscripts
     git clone git@github.com:ipartola/hawkeye.git
     cd hawkeye/
     debuild
@@ -33,7 +33,7 @@ If you want to roll your own .deb package:
 
 ## Configuration
 
-All configuration by default is stored in /etc/hawkeye/hawkeye.conf. The configuration options are self-explanatory (host, port, video sources, SSL settings, etc.) do note that you should obtain a valid SSL certificate and set it up if you plan on accessing these video streams over the Internet. That is the *only* way to secure your video streams from people snooping on them.
+All configuration by default is stored in /etc/hawkeye/hawkeye.conf. The configuration options are self-explanatory (host, port, video sources, SSL settings, etc.) Do note that you should obtain a valid SSL certificate and set it up if you plan on accessing these video streams over the Internet. That is the *only* way to secure your video streams from people snooping on them.
 
 ## Hardware Selection
 
