@@ -1,3 +1,10 @@
+hawkeye (0.2) stable; urgency=low
+
+  * Bug fix: prevent crash when parsing config file.
+  * Bug fix: use signed return value for client_write() in server code.
+
+ -- Igor Partola <igor@igorpartola.com>  Mon, 6 Sep 2014 11:13:04 -0400
+
 hawkeye (0.1) stable; urgency=low
 
   * source package automatically created by stdeb 0.6.0+git

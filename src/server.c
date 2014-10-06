@@ -38,7 +38,7 @@ static void add_client(struct server *s, int sock, struct sockaddr_storage *addr
 static void remove_client(struct server *s, struct client *c);
 static void reset_client(struct client *c);
 static size_t client_read(struct client *c, void *buf, const size_t len);
-static size_t client_write(struct client *c, const void *buf, const size_t len);
+static ssize_t client_write(struct client *c, const void *buf, const size_t len);
 static void read_request(struct server *s, struct client *c, struct frame_buffers *fbs);
 static void handle_request(struct server *s, struct client *c, struct frame_buffers *fbs);
 static void respond_to_client(struct server *s, struct client *c);
@@ -112,7 +112,7 @@ static int open_sock(const char *hostname, short port, int family, int socktype)
     return sock;
 }
 
-static size_t client_write(struct client *c, const void *buf, const size_t len) {
+static ssize_t client_write(struct client *c, const void *buf, const size_t len) {
     if (c->ssl != NULL) {
         return SSL_write(c->ssl, buf, len);
     }
@@ -331,7 +331,8 @@ static void handle_request(struct server *s, struct client *c, struct frame_buff
 
 static void respond_to_client(struct server *s, struct client *c) {
     struct frame *f;
-    size_t flen, len;
+    size_t flen;
+    ssize_t len;
     char buf[SERVER_BUFFER_SIZE];
     
     if (!c->request_received || c->request == REQUEST_INCOMPLETE) {

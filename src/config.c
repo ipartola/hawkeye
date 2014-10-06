@@ -157,7 +157,9 @@ void add_config_item(struct config *con, signed char short_name, char *long_name
     c->long_option.flag = NULL;
     c->long_option.val = c->short_name;
     
-    *c->dst = NULL;
+    if (dst_type == CONFIG_STR) {
+        *c->dst = NULL;
+    }
 
     con->count++;
     
