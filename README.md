@@ -18,7 +18,7 @@ If you already have a webcam connected, Hawkeye will start listening on localhos
 If you want to build Hawkeye from source:
 
     sudo apt-get install build-essential debhelper libv4l-dev libjpeg8-dev libssl-dev git
-    git clone git@github.com:ipartola/hawkeye.git
+    git clone https://github.com/ipartola/hawkeye.git
     cd hawkeye/
     make
     sudo make install
@@ -26,7 +26,7 @@ If you want to build Hawkeye from source:
 If you want to roll your own .deb package:
 
     sudo apt-get install build-essential debhelper libv4l-dev libjpeg8-dev libssl-dev git devscripts
-    git clone git@github.com:ipartola/hawkeye.git
+    git clone https://github.com/ipartola/hawkeye.git
     cd hawkeye/
     debuild
     cd ..
