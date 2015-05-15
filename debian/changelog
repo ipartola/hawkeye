@@ -1,5 +1,8 @@
 hawkeye (0.3) stable; urgency=low
 
+  * Bug fix: fixed race condition in capturing frames.
+  * Bug fix: logging correct server socket address.
+  * Bug fix: prevent package install failure if hawkeye does not start.
   * Minor updates to the build process.
 
  -- Igor Partola <igor@igorpartola.com>  Tue, 12 May 2015 15:41:29 -0400
