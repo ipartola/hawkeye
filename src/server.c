@@ -89,8 +89,18 @@ static int open_sock(const char *hostname, short port, int family, int socktype)
 
         if (sock >= 0) {
             if (bind(sock, res->ai_addr, res->ai_addrlen) == 0) {
-                inet_ntop(res->ai_family, (void *) &((struct sockaddr_in6*) res->ai_addr)->sin6_addr, cbuf, sizeof(cbuf));
-                log_itf(LOG_INFO, "Listening on %s port %d.", cbuf, port);
+                if (res->ai_family == AF_INET6) {
+                    inet_ntop(res->ai_family, (void *) &((struct sockaddr_in6*) res->ai_addr)->sin6_addr, cbuf, sizeof(cbuf));
+                    log_itf(LOG_INFO, "Listening on %s port %d.", cbuf, port);
+                }
+                else if (res->ai_family == AF_INET) {
+                    inet_ntop(res->ai_family, (void *) &((struct sockaddr_in*) res->ai_addr)->sin_addr, cbuf, sizeof(cbuf));
+                    log_itf(LOG_INFO, "Listening on %s port %d.", cbuf, port);
+                }
+                else {
+                    log_it(LOG_INFO, "Not sure what address I am listening on.");
+                }
+                
 
                 break;
             }
