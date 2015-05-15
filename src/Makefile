@@ -3,10 +3,10 @@ CFLAGS=-O3 -I. -lssl -lcrypto -lv4l2  -ljpeg -Wall -Wl,-wrap,malloc,-wrap,reallo
 OBJ = main.o memory.o logger.o frames.o v4l2uvc.o jpeg_utils.o profile.o utils.o server.o daemon.o version.o settings.o config.o http.o security.o
 
 %.o: %.c %.h
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) $(LDFLAGS) $(CPPFLAGS)
 
 hawkeye: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) $(CPPFLAGS)
 
 .PHONY: clean
 
