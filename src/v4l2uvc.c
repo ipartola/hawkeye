@@ -406,10 +406,11 @@ size_t copy_frame(unsigned char *dst, const size_t dst_size, unsigned char *src,
     return pos;
 }
 
-int capture_frame(struct video_device *vd) {
+size_t capture_frame(struct video_device *vd) {
     memset(&vd->buf, 0, sizeof(struct v4l2_buffer));
     vd->buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     vd->buf.memory = V4L2_MEMORY_MMAP;
+    size_t frame_size = 0;
 
     if (xioctl(vd->fd, VIDIOC_DQBUF, &vd->buf) < 0) {
         log_itf(LOG_ERROR, "Unable to dequeue buffer on device %s.", vd->device_filename);
@@ -439,6 +440,10 @@ int capture_frame(struct video_device *vd) {
             break;
     }
 
+    return vd->buf.bytesused;
+}
+
+int requeue_device_buffer(struct video_device *vd) {
     if (xioctl(vd->fd, VIDIOC_QBUF, &vd->buf) < 0) {
         log_itf(LOG_ERROR, "Unable to requeue buffer on device %s.", vd->device_filename);
         return -1;

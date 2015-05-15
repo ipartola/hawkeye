@@ -115,19 +115,27 @@ void grab_frame(struct frame_buffer *fb) {
     unsigned char buf[fb->vd->framebuffer_size];
     size_t frame_size = 0;
 
-    capture_frame(fb->vd);
+    frame_size = capture_frame(fb->vd);
 
-    switch (fb->vd->format_in) {
-        case V4L2_PIX_FMT_MJPEG:
-            frame_size = copy_frame(buf, sizeof(buf), fb->vd->framebuffer, fb->vd->buf.bytesused);
-            break;
-        case V4L2_PIX_FMT_YUYV:
-            frame_size = compress_yuyv_to_jpeg(buf, sizeof(buf), fb->vd->framebuffer, fb->vd->buf.bytesused, fb->vd->width, fb->vd->height, fb->vd->jpeg_quality);
-            break;
-        default:
-            panic("Video device is using unknown format.");
-            break;
+    if (frame_size <= 0) {
+        log_it(LOG_ERROR, "Could not capture frame.");
     }
+    else {
+
+        switch (fb->vd->format_in) {
+            case V4L2_PIX_FMT_MJPEG:
+                frame_size = copy_frame(buf, sizeof(buf), fb->vd->framebuffer, frame_size);
+                break;
+            case V4L2_PIX_FMT_YUYV:
+                frame_size = compress_yuyv_to_jpeg(buf, sizeof(buf), fb->vd->framebuffer, frame_size, fb->vd->width, fb->vd->height, fb->vd->jpeg_quality);
+                break;
+            default:
+                panic("Video device is using unknown format.");
+                break;
+        }
+    }
+    
+    requeue_device_buffer(fb->vd);
 
     add_frame(fb, buf, frame_size);
 }

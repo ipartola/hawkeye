@@ -122,6 +122,7 @@ void destroy_video_device(struct video_device *vd);
 int set_resolution(struct video_device *vd, int width, int height);
 
 size_t copy_frame(unsigned char *dst, const size_t dst_size, unsigned char *src, const size_t src_size);
-int capture_frame(struct video_device *vd);
+size_t capture_frame(struct video_device *vd);
+int requeue_device_buffer(struct video_device *vd);
 
 #endif
