@@ -106,6 +106,19 @@ case "$1" in
         ;;
 	esac
   ;;
+  soft-start)
+    log_daemon_msg "Soft starting $DESC " "$NAME"
+    do_start
+    case "$?" in
+		0|1)
+            log_end_msg 0
+        ;;
+		2)
+            log_end_msg 1
+            exit 0
+        ;;
+	esac
+  ;;
   stop)
 	log_daemon_msg "Stopping $DESC" "$NAME"
 	do_stop
