@@ -21,7 +21,7 @@ static void read_line(char *line, char **name, char **value) {
 
     *name = *value = NULL;
     len = strlen(line);
-	
+
     // Cut line at comment
     for (i = 0; i < len; i++) {
         if (line[i] == '#') {
@@ -29,7 +29,7 @@ static void read_line(char *line, char **name, char **value) {
             break;
         }
     }
-    
+
     // Recalculate line length in case it had a comment.
     len = strlen(line);
 
@@ -136,7 +136,7 @@ struct config *create_config() {
 
 void add_config_item(struct config *con, signed char short_name, char *long_name, char dst_type, void *dst, char *default_value) {
     struct config_item *c;
-    
+
     if (con->items == NULL) {
         con->items = malloc(sizeof(struct config_item));
     }
@@ -145,24 +145,24 @@ void add_config_item(struct config *con, signed char short_name, char *long_name
     }
 
     c = &con->items[con->count];
-    
+
     c->short_name = short_name;
     c->long_name = strdup(long_name);
     c->dst_type = dst_type;
     c->dst = dst;
     c->default_value = strdup(default_value);
-    
+
     c->long_option.name = c->long_name;
     c->long_option.has_arg = (dst_type != CONFIG_BOOL);
     c->long_option.flag = NULL;
     c->long_option.val = c->short_name;
-    
+
     if (dst_type == CONFIG_STR) {
         *c->dst = NULL;
     }
 
     con->count++;
-    
+
     set_config_item_value(c, default_value);
 }
 
@@ -175,16 +175,15 @@ void read_config_file(struct config *con, char *filename) {
     name = value = NULL;
 
 	if(NULL == (fp = fopen(filename, "r"))) {
-        return;
 		panic("Could not open config file");
 	}
-	
+
 	while(NULL != fgets(line, sizeof(line), fp)) {
 		read_line(line, &name, &value);
 
 		if (name != NULL && value != NULL && strlen(name) > 0 && strlen(value) > 0) {
             key = get_key_by_name(con, name);
-            
+
             if (key == '\0') {
                 user_panic("Found unknown option in config file: '%s'.", name);
             }
@@ -205,7 +204,7 @@ void read_command_line(struct config *con, int argc, char *argv[]) {
     struct config_item *c;
     struct option long_options[con->count + 1];
     struct option null_option;
-    
+
     memset(optstring, 0, sizeof(optstring));
     opstring_pos = 0;
 
@@ -213,7 +212,7 @@ void read_command_line(struct config *con, int argc, char *argv[]) {
         c = &con->items[i];
 
         optstring[opstring_pos++] = c->short_name;
-        
+
         if (c->dst_type != CONFIG_BOOL) {
             optstring[opstring_pos++] = ':';
         }
@@ -225,7 +224,7 @@ void read_command_line(struct config *con, int argc, char *argv[]) {
     null_option.has_arg = 0;
     null_option.flag = NULL;
     null_option.val = 0;
-    
+
     memcpy((void *) &long_options[con->count], &null_option, sizeof(struct option));
 
     int old_optind = optind;
