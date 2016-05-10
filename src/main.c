@@ -16,7 +16,6 @@
 #include "v4l2uvc.h"
 #include "jpeg_utils.h"
 #include "server.h"
-#include "profile.h"
 #include "utils.h"
 #include "daemon.h"
 #include "settings.h"
@@ -41,7 +40,7 @@ void init_signals(){
     struct sigaction sigact;
 
     sigact.sa_handler = signal_handler;
-    
+
     sigemptyset(&sigact.sa_mask);
     sigact.sa_flags = 0;
 
@@ -50,10 +49,12 @@ void init_signals(){
     sigaction(SIGHUP, &sigact, (struct sigaction *) NULL);
     sigaction(SIGUSR1, &sigact, (struct sigaction *) NULL);
     sigaction(SIGUSR2, &sigact, (struct sigaction *) NULL);
-    
+
     signal(SIGPIPE, SIG_IGN);
 }
 
+// Not used currently, but may use later to gather statistics
+/*
 double get_real_fps(struct video_device *vd, unsigned int rounds) {
     struct timeval start, end;
     unsigned int i;
@@ -72,6 +73,7 @@ double get_real_fps(struct video_device *vd, unsigned int rounds) {
 
     return rounds/total;
 }
+*/
 
 struct frame_buffers *init_frame_buffers(size_t device_count, char *device_names[]) {
     int i;
@@ -102,7 +104,7 @@ void destroy_frame_buffers(struct frame_buffers *fbs) {
 
     for (i = 0; i < fbs->count; i++) {
         fb = &fbs->buffers[i];
-        
+
         destroy_video_device(fb->vd);
         destroy_frame_buffer(fb);
     }
@@ -134,7 +136,7 @@ void grab_frame(struct frame_buffer *fb) {
                 break;
         }
     }
-    
+
     requeue_device_buffer(fb->vd);
 
     add_frame(fb, buf, frame_size);
@@ -161,9 +163,9 @@ int main(int argc, char *argv[]) {
     init_signals();
 
     open_log(settings.log_file, settings.log_level);
-    
+
     fbs = init_frame_buffers(settings.video_device_count, settings.video_device_files);
-    
+
     nchown(settings.log_file, settings.user, settings.group);
     nchown(settings.pid_file, settings.user, settings.group);
 
@@ -171,7 +173,7 @@ int main(int argc, char *argv[]) {
 
     SSL_library_init();
     s = create_server(settings.host, settings.port, fbs, settings.static_root, settings.auth, settings.ssl_cert_file, settings.ssl_key_file);
-    
+
     drop_privileges(settings.user, settings.group);
 
     while (is_running) {
@@ -181,7 +183,7 @@ int main(int argc, char *argv[]) {
             grab_frame(fb);
         }
         delta = gettime() - delta;
-        
+
         timeout = max(MIN_HTTP_TIMEOUT, 1 / (double) settings.fps - delta);
 
         serve_clients(s, fbs, timeout);
@@ -190,9 +192,9 @@ int main(int argc, char *argv[]) {
     destroy_server(s);
     destroy_frame_buffers(fbs);
     EVP_cleanup();
-	
+
     log_it(LOG_INFO, "Shutting down.");
-    
+
     if (strlen(settings.pid_file) > 0 ) {
         unlink(settings.pid_file);
     }

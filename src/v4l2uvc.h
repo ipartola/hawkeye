@@ -104,7 +104,7 @@ struct video_device {
     int fps;
     int format_in;
     int jpeg_quality;
-    
+
     struct v4l2_fmtdesc *formats;
     unsigned int format_count;
     unsigned int current_format_index;
@@ -119,7 +119,6 @@ int init_v4l2(struct video_device *vd);
 
 struct video_device *create_video_device(char *device, int width, int height, int fps, int format, int jpeg_quality);
 void destroy_video_device(struct video_device *vd);
-int set_resolution(struct video_device *vd, int width, int height);
 
 size_t copy_frame(unsigned char *dst, const size_t dst_size, unsigned char *src, const size_t src_size);
 size_t capture_frame(struct video_device *vd);

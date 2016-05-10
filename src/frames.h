@@ -29,7 +29,6 @@ struct frame_buffers {
 void create_frame_buffer(struct frame_buffer *fb, size_t n);
 void destroy_frame_buffer(struct frame_buffer *fb);
 void add_frame(struct frame_buffer *fb, void *data, size_t data_len);
-struct frame *get_current_frame(struct frame_buffer *fb);
 struct frame *get_frame(struct frame_buffer *fb, unsigned long index);
 
 #endif

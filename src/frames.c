@@ -61,10 +61,6 @@ void add_frame(struct frame_buffer *fb, void *data, size_t data_len) {
     f->data_len = total_data_len;
 }
 
-struct frame *get_current_frame(struct frame_buffer *fb) {
-    return &fb->frames[fb->current_frame % fb->buffer_size];
-}
-
 struct frame *get_frame(struct frame_buffer *fb, unsigned long index) {
 
     if (index <= fb->current_frame - fb->buffer_size) {

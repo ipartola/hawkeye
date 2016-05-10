@@ -24,42 +24,6 @@ void panic(const char* str) {
 	exit(EXIT_FAILURE);
 }
 
-// Random number generator stuff
-struct random_data rng_state;
-char rng_state_buffer[256];
-static pthread_mutex_t rng_lock = PTHREAD_MUTEX_INITIALIZER;
-
-void rng_init() {
-	initstate_r((unsigned int) time(NULL), (char *) rng_state_buffer,
-			sizeof(rng_state_buffer), &rng_state);
-}
-
-void rng_cleanup() {
-	pthread_mutex_destroy(&rng_lock);
-}
-
-unsigned int xrandom() {
-	int rnd = 0;
-	pthread_mutex_lock(&rng_lock);
-	random_r(&rng_state, &rnd);
-	pthread_mutex_unlock(&rng_lock);
-	return (unsigned int) rnd;
-}
-
-char *make_nonce() {
-	char *nonce = malloc(NONCE_SIZE);
-	int rnd;
-	memset(nonce, 0, NONCE_SIZE);
-
-	rnd = xrandom();
-	pthread_mutex_lock(&rng_lock);
-	random_r(&rng_state, &rnd);
-	pthread_mutex_unlock(&rng_lock);
-	
-	snprintf((char *) nonce, NONCE_SIZE - 1, "%d", rnd);
-	return nonce;
-}
-
 // Memory allocator wrappers
 
 char* __real_strdup(const char *s);
@@ -88,7 +52,7 @@ void* __wrap_malloc(size_t size) {
 		exit(EXIT_FAILURE);
 	}
 	return tmp;
-} 
+}
 
 void* __wrap_realloc(void *ptr, size_t size) {
 	void *tmp = __real_realloc(ptr, size);
@@ -110,5 +74,5 @@ void* __wrap_calloc(size_t num, size_t size) {
 		exit(EXIT_FAILURE);
 	}
 	return tmp;
-} 
+}
 

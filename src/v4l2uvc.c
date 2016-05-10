@@ -82,10 +82,10 @@ struct video_device *create_video_device(char *device, int width, int height, in
     vd->format_in = format;
     vd->use_streaming = 1; // Use mmap
     vd->jpeg_quality = jpeg_quality;
-    
+
     vd->format_count = 0;
     vd->formats = NULL;
-    
+
     vd->resolution_count = 0;
     vd->resolutions = NULL;
 
@@ -122,14 +122,14 @@ struct video_device *create_video_device(char *device, int width, int height, in
         if (fmtdesc.pixelformat == format) {
             vd->current_format_index = vd->format_count;
         }
-        
+
         DBG("%s: Supported format: %s", vd->device_filename, fmtdesc.description);
 
         memset(&fsenum, 0, sizeof(struct v4l2_frmsizeenum));
         for (j = 0; ; j++) {
             fsenum.pixel_format = fmtdesc.pixelformat;
             fsenum.index = j;
-            
+
             if (xioctl(vd->fd, VIDIOC_ENUM_FRAMESIZES, &fsenum) != 0) {
                 break; // Stop enumeration
             }
@@ -144,15 +144,15 @@ struct video_device *create_video_device(char *device, int width, int height, in
             vd->resolutions[vd->resolution_count].width = fsenum.discrete.width;
             vd->resolutions[vd->resolution_count].height = fsenum.discrete.height;
             vd->resolutions[vd->resolution_count].pixelformat = fmtdesc.pixelformat;
-            
+
             if (format == fmtdesc.pixelformat) {
                 if (fsenum.discrete.width == width && fsenum.discrete.height == height) {
                     vd->current_resolution_index = vd->resolution_count;
                 }
             }
-            
+
             DBG("%s: supported size: %dx%d", vd->device_filename, fsenum.discrete.width, fsenum.discrete.height);
-            
+
             vd->resolution_count += 1;
         }
 
@@ -185,7 +185,7 @@ int init_v4l2(struct video_device *vd) {
     }
 
     memset(&vd->cap, 0, sizeof(struct v4l2_capability));
-    
+
     if (xioctl(vd->fd, VIDIOC_QUERYCAP, &vd->cap) < 0) {
         log_itf(LOG_ERROR, "Error opening device %s: unable to query device.", vd->device_filename);
         return -1;
@@ -304,7 +304,7 @@ int init_v4l2(struct video_device *vd) {
         vd->buf.index = i;
         vd->buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         vd->buf.memory = V4L2_MEMORY_MMAP;
-        
+
         if (xioctl(vd->fd, VIDIOC_QBUF, &vd->buf) < 0) {
             log_itf(LOG_ERROR, "Unable to query buffer on device %s.", vd->device_filename);
             return -1;
@@ -415,7 +415,7 @@ size_t capture_frame(struct video_device *vd) {
         log_itf(LOG_ERROR, "Unable to dequeue buffer on device %s.", vd->device_filename);
         return -1;
     }
-    
+
     switch(vd->format_in) {
         case V4L2_PIX_FMT_MJPEG:
             if (vd->buf.bytesused <= MIN_BYTES_USED) {
@@ -455,7 +455,7 @@ void destroy_video_device(struct video_device *vd) {
     if (vd->streaming_state == STREAMING_ON) {
         video_disable(vd, STREAMING_OFF);
     }
-    
+
     if (CLOSE_VIDEO(vd->fd) != 0) {
         log_itf(LOG_ERROR, "Failed to close device %s.", vd->device_filename);
     }
@@ -469,54 +469,11 @@ void destroy_video_device(struct video_device *vd) {
     free(vd->formats);
     vd->formats = NULL;
     vd->format_count = 0;
-    
+
     free(vd->resolutions);
     vd->resolutions = NULL;
     vd->resolution_count = 0;
 
     free(vd);
-}
-
-
-/* It should set the capture resolution
-    Cheated from the openCV cap_libv4l.cpp the method is the following:
-    Turn off the stream (video_disable)
-    Unmap buffers
-    Close the filedescriptor
-    Initialize the camera again with the new resolution
-*/
-int set_resolution(struct video_device *vd, int width, int height) {
-    int i;
-
-    log_itf(LOG_INFO, "set_resolution(%d, %d) on device %s.", width, height, vd->device_filename);
-
-    vd->streaming_state = STREAMING_PAUSED;
-    if (video_disable(vd, STREAMING_PAUSED) != 0) {
-        log_itf(LOG_ERROR, "Failed to disable streaming for device %s.", vd->device_filename);
-        return -1;
-    }
-
-    DBG("Unmap buffers.");
-
-    for(i = 0; i < NB_BUFFER; i++)
-        munmap(vd->mem[i], vd->buf.length);
-
-    if (CLOSE_VIDEO(vd->fd) != 0) {
-        user_panic("Failed to close device %s.", vd->device_filename);
-    }
-
-    vd->width = width;
-    vd->height = height;
-
-    if (init_v4l2(vd) < 0) {
-        user_panic("init_v4l2() failed for device %s.", vd->device_filename);
-    }
-
-    DBG("reinit done.");
-    if (video_enable(vd) < 0) {
-        user_panic("Failed to enable video for device %s.", vd->device_filename);
-    }
-    return 0;
-
 }
 
