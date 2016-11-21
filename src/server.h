@@ -18,6 +18,7 @@
 #define STREAM_HEADER "HTTP/1.0 200 OK\r\n" \
     "Server: hawkeye\r\n" \
     "Connection: close\r\n" \
+    "Access-Control-Allow-Origin: *\r\n" \
     "Content-Type: multipart/x-mixed-replace;boundary=" BOUNDARY "\r\n" \
     "Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0\r\n" \
     "Pragma: no-cache\r\n" \
@@ -31,6 +32,7 @@
 #define HTTP_BAD_REQUEST "HTTP/1.1 400 BAD REQUEST\r\n" \
     "Server: hawkeye\r\n" \
     "Connection: close\r\n" \
+    "Access-Control-Allow-Origin: *\r\n" \
     "Content-Type: text/html; charset=utf-8\r\n" \
     "\r\n" \
     "Bad request"
@@ -38,6 +40,7 @@
 #define HTTP_AUTH_REQUIRED "HTTP/1.1 401 NOT AUTHORIZED\r\n" \
     "Server: hawkeye\r\n" \
     "Connection: close\r\n" \
+    "Access-Control-Allow-Origin: *\r\n" \
     "WWW-Authenticate: Basic realm=\"Hawkeye\"\r\n" \
     "Content-Type: text/html; charset=utf-8\r\n" \
     "\r\n" \
@@ -46,6 +49,7 @@
 #define HTTP_NOT_FOUND "HTTP/1.1 404 NOT FOUND\r\n" \
     "Server: hawkeye\r\n" \
     "Connection: close\r\n" \
+    "Access-Control-Allow-Origin: *\r\n" \
     "Content-Type: text/html; charset=utf-8\r\n" \
     "\r\n" \
     "Could not find resource at this URL."
@@ -53,6 +57,7 @@
 #define HTTP_STATIC_FILE_HEADERS_TMPL "HTTP/1.1 200 OK\r\n" \
     "Server: hawkeye\r\n" \
     "Connection: keep-alive\r\n" \
+    "Access-Control-Allow-Origin: *\r\n" \
     "Content-Length: %ld\r\n" \
     "Content-Type: %s\r\n" \
     "\r\n"

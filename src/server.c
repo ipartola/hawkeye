@@ -33,7 +33,7 @@
 }
 
 static char* ntop(struct sockaddr_storage *addr, char *cbuf, size_t cbuf_len);
-static int open_sock(const char *hostname, short port, int family, int socktype);
+static int open_sock(const char *hostname, unsigned short port, int family, int socktype);
 static void add_client(struct server *s, int sock, struct sockaddr_storage *addr, struct frame_buffers *fbs);
 static void remove_client(struct server *s, struct client *c);
 static void reset_client(struct client *c);
@@ -57,7 +57,7 @@ static char* ntop(struct sockaddr_storage *addr, char *cbuf, size_t cbuf_len) {
     }
 }
 
-static int open_sock(const char *hostname, short port, int family, int socktype) {
+static int open_sock(const char *hostname, unsigned short port, int family, int socktype) {
     struct addrinfo hints, *res, *ressave;
     int n, sock;
     int sockoptval = 1;
