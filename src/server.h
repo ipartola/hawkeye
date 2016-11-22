@@ -71,6 +71,16 @@
     "\r\n" \
     "{\"stream_count\": %d, \"width\": %d, \"height\": %d}"
 
+#define JPEG_HEADER "HTTP/1.0 200 OK\r\n" \
+    "Server: hawkeye\r\n" \
+    "Connection: close\r\n" \
+    "Access-Control-Allow-Origin: *\r\n" \
+    "Content-Type: image/jpeg\r\n" \
+    "Cache-Control: no-store, no-cache, pre-check=0, post-check=0, max-age=0\r\n" \
+    "Pragma: no-cache\r\n" \
+    "Expires: Mon, 1 Jan 2000 00:00:00 GMT\r\n\r\n"
+
+
 #define REQUEST_INCOMPLETE 0
 #define REQUEST_STREAM 1
 #define REQUEST_NOT_FOUND 2
@@ -78,6 +88,7 @@
 #define REQUEST_STREAM_INFO 4
 #define REQUEST_STATIC_FILE 5
 #define REQUEST_AUTH_REQUIRED 6
+#define REQUEST_STILL 7
 
 #define KEEP_ALIVE_TIMEOUT 30.0
 

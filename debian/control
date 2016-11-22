@@ -3,7 +3,7 @@ Maintainer: Igor Partola <igor@igorpartola.com>
 Section: admin
 Priority: optional
 Build-Depends: debhelper, libv4l-dev, libjpeg8-dev, libssl-dev, dpkg-dev (>= 1.16.1~)
-Standards-Version: 3.9.3
+Standards-Version: 3.9.5
 
 Package: hawkeye
 Architecture: any

@@ -307,6 +307,19 @@ static void handle_request(struct server *s, struct client *c, struct frame_buff
             }
         }
     }
+    else if (strncmp(req.path, "/still/", strlen("/still/")) == 0) {
+        index = atoi(&req.path[strlen("/still/")]);
+        if (index < 0 || index >= fbs->count) {
+            set_client_response(c, REQUEST_NOT_FOUND, HTTP_NOT_FOUND);
+        }
+        else {
+            set_client_response(c, REQUEST_STILL, JPEG_HEADER);
+
+            c->fb = &fbs->buffers[index];
+            c->current_frame = c->fb->current_frame;
+            c->current_frame_pos = 0;
+        }
+    }
     else {
 
         if (!strlen(s->static_root)) {
@@ -341,7 +354,6 @@ static void handle_request(struct server *s, struct client *c, struct frame_buff
 
 static void respond_to_client(struct server *s, struct client *c) {
     struct frame *f;
-    size_t flen;
     ssize_t len;
     char buf[SERVER_BUFFER_SIZE];
     
@@ -357,9 +369,35 @@ static void respond_to_client(struct server *s, struct client *c) {
         c->last_communication = gettime();
         return;
     }
+    
+    if (c->request == REQUEST_STILL) {
+        if ((f = get_frame(c->fb, c->current_frame)) == NULL) {
+            // Client failed to read the frame fast enough before it disappeared
+            return remove_client(s, c);
+        }
 
+        f = get_frame(c->fb, c->current_frame);
+        ssize_t jpeg_len = f->data_len - (strlen(FRAME_HEADER) + strlen(FRAME_FOOTER));
+        char *jpeg_ptr = f->data + strlen(FRAME_HEADER);
+        len = client_write(c, jpeg_ptr, jpeg_len - c->current_frame_pos);
+
+        if (len < 0) {
+            if (errno == EINTR) {
+                return;
+            }
+            return remove_client(s, c);
+        }
+        c->last_communication = gettime();
+        c->current_frame_pos += len;
+        
+        if (c->current_frame_pos == jpeg_len) {
+            return remove_client(s, c);
+        }
+        return;
+    }
     // Serve static file
-    if (c->request == REQUEST_STATIC_FILE) {
+    else if (c->request == REQUEST_STATIC_FILE) {
+        size_t flen;
 
         if ((flen = fread(buf, sizeof(char), sizeof(buf), c->static_file)) < 1) {
             // File is done, reset client for next request

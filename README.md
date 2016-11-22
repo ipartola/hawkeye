@@ -35,6 +35,10 @@ If you want to roll your own .deb package:
 
 All configuration by default is stored in /etc/hawkeye/hawkeye.conf. The configuration options are self-explanatory (host, port, video sources, SSL settings, etc.) Do note that you should obtain a valid SSL certificate and set it up if you plan on accessing these video streams over the Internet. That is the *only* way to secure your video streams from people snooping on them.
 
+## Still images
+
+In addition to the MJPEG streams, you can get stills from each webcam at /still/NUM. For example: http://localhost:8000/still/0
+
 ## Hardware Selection
 
 Hawkeye works with UVC (USB Video Class) devices, and can handle both MJPEG and raw YUV streams. Note that MJPEG is highly recommended as that is what Hawkeye outputs so it requires no transcoding. Hawkeye will log a warning if it is unable to use MJPEG directly from the webcam.
