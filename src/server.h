@@ -64,6 +64,8 @@
 
 #define HTTP_STREAM_INFO_TEMPLATE "HTTP/1.0 200 OK\r\n" \
     "Server: hawkeye\r\n" \
+    "Connection: close\r\n" \
+    "Access-Control-Allow-Origin: *\r\n" \
     "Content-Type: application/json\r\n" \
     "Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0\r\n" \
     "Pragma: no-cache\r\n" \
@@ -110,7 +112,7 @@ struct client {
     char *resp;
 
     FILE *static_file;
-    
+
     int request; // If non-negative: index of stream to send. If negative: serve the specific response
 
     struct frame_buffer *fb;
