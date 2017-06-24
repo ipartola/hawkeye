@@ -21,7 +21,7 @@
 #include "settings.h"
 
 #define FRAME_BUFFER_LENGTH 8
-#define MIN_HTTP_TIMEOUT 0.05
+#define HTTP_TIMEOUT 0.01
 
 static int is_running = 1;
 
@@ -147,8 +147,9 @@ int main(int argc, char *argv[]) {
     struct frame_buffers *fbs;
     struct frame_buffer *fb;
     struct server *s;
+    struct timespec ts;
 
-    double timeout, delta;
+    double delta;
 
     init_settings(argc, argv);
 
@@ -166,8 +167,9 @@ int main(int argc, char *argv[]) {
 
     fbs = init_frame_buffers(settings.video_device_count, settings.video_device_files);
 
-    nchown(settings.log_file, settings.user, settings.group);
-    nchown(settings.pid_file, settings.user, settings.group);
+    if (strlen(settings.log_file) > 0) {
+        nchown(settings.log_file, settings.user, settings.group);
+    }
 
     log_it(LOG_INFO, "Starting server.");
 
@@ -182,11 +184,14 @@ int main(int argc, char *argv[]) {
             fb = &fbs->buffers[i];
             grab_frame(fb);
         }
+
+        serve_clients(s, fbs, HTTP_TIMEOUT);
+
         delta = gettime() - delta;
-
-        timeout = max(MIN_HTTP_TIMEOUT, 1 / (double) settings.fps - delta);
-
-        serve_clients(s, fbs, timeout);
+        if (delta > 0) {
+            double_to_timespec(delta, &ts);
+            nanosleep(&ts, NULL);
+        }
     }
 
     destroy_server(s);

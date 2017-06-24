@@ -20,6 +20,11 @@ void double_to_timeval(double d, struct timeval *tv) {
     tv->tv_usec = (int) ((d - (int) d) * 1000 * 1000);
 }
 
+void double_to_timespec(double d, struct timespec *ts) {
+    ts->tv_sec = (int) d;
+    ts->tv_nsec = (int) ((d - (int) d) * 1000 * 1000 * 1000);
+}
+
 short is_blank(const char c) {
 	if (c == 0 || c == ' ' || c == '\t' || c == '\n' || c == '\r')
 		return 1;

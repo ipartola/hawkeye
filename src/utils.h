@@ -13,6 +13,7 @@
      _a < _b ? _a : _b; })
 
 void double_to_timeval(double d, struct timeval *tv);
+void double_to_timespec(double d, struct timespec *ts);
 double gettime();
 short is_blank(const char c);
 void trim(char *c);

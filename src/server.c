@@ -450,12 +450,12 @@ static void respond_to_client(struct server *s, struct client *c) {
             c->last_communication = gettime();
 
             c->current_frame_pos += len;
-            
-            if (c->current_frame_pos == f->data_len) {
-                // Catch them up to the latest frame
-                c->current_frame = c->fb->current_frame;
-                c->current_frame_pos = 0;
-            }
+        }
+
+        if (c->current_frame_pos == f->data_len && c->current_frame < c->fb->current_frame) {
+            // We have already finished the current frame, and a new frame is available
+            c->current_frame = c->fb->current_frame;
+            c->current_frame_pos = 0;
         }
 
     }
@@ -546,78 +546,73 @@ void serve_clients(struct server *s, struct frame_buffers *fbs, double timeout) 
     socklen_t client_addr_len = sizeof(client_addr);
     struct client *c;
     struct timeval timeout_tv;
-    double now;
+    double now = gettime();
 
-    while (timeout > 0) {
-        FD_ZERO(&read_set);
-        FD_ZERO(&write_set);
+    FD_ZERO(&read_set);
+    FD_ZERO(&write_set);
 
-        if (s->sock4 >= 0) {
-            FD_SET(s->sock4, &read_set);
+    if (s->sock4 >= 0) {
+        FD_SET(s->sock4, &read_set);
+    }
+
+    if (s->sock6 >= 0) {
+        FD_SET(s->sock6, &read_set);
+    }
+
+    for (sock = 0; sock < FD_SETSIZE; sock++) {
+        c = s->clients[sock];
+        if (c != NULL) {
+            FD_SET(c->sock, &read_set);
+            FD_SET(c->sock, &write_set);
+            highest_sock_num = max(highest_sock_num, c->sock);
         }
+    }
 
-        if (s->sock6 >= 0) {
-            FD_SET(s->sock6, &read_set);
-        }
+    double_to_timeval(timeout, &timeout_tv);
+    if ((select_result = select(highest_sock_num + 1, &read_set, &write_set, NULL, &timeout_tv)) < 0) {
+        serrchk("select() failed");
+    }
 
-        for (sock = 0; sock < FD_SETSIZE; sock++) {
-            c = s->clients[sock];
-            if (c != NULL) {
-                FD_SET(c->sock, &read_set);
-                FD_SET(c->sock, &write_set);
-                highest_sock_num = max(highest_sock_num, c->sock);
-            }
-        }
+    if (!select_result) {
+        return;
+    }
 
-        double_to_timeval(timeout, &timeout_tv);
-        now = gettime();
-        if ((select_result = select(highest_sock_num + 1, &read_set, &write_set, NULL, &timeout_tv)) < 0) {
-            serrchk("select() failed");
-        }
+    for (sock = 0; sock <= highest_sock_num; sock++) {
 
-        if (!select_result) {
-            break;
-        }
-
-        for (sock = 0; sock <= highest_sock_num; sock++) {
-
-            // Look over read_set
-            if (FD_ISSET(sock, &read_set)) {
-                if (sock == s->sock4 || sock == s->sock6) {
-                    // Accept client
-                    if ((client_sock = accept(sock, (struct sockaddr *) &client_addr, &client_addr_len)) < 0) {
-                        serrchk("accept() failed");
-                    }
-                    
-                    add_client(s, client_sock, &client_addr, fbs);
-                    continue;
+        // Look over read_set
+        if (FD_ISSET(sock, &read_set)) {
+            if (sock == s->sock4 || sock == s->sock6) {
+                // Accept client
+                if ((client_sock = accept(sock, (struct sockaddr *) &client_addr, &client_addr_len)) < 0) {
+                    serrchk("accept() failed");
                 }
-                else {
-                    c = s->clients[sock];
-                    if (c != NULL) {
-                        read_request(s, c, fbs);
-                    }
-                }
-            }
 
-            // Look over write set
-            if (FD_ISSET(sock, &write_set)) {
+                add_client(s, client_sock, &client_addr, fbs);
+                continue;
+            }
+            else {
                 c = s->clients[sock];
                 if (c != NULL) {
-                    respond_to_client(s, c);
+                    read_request(s, c, fbs);
                 }
             }
-
-            // Prune clinets that are not communicating
-            if ((c = s->clients[sock]) != NULL) {
-                if (now - c->last_communication > KEEP_ALIVE_TIMEOUT) {
-                    remove_client(s, c);
-                }
-            }
-
         }
 
-        timeout -= gettime() - now;
+        // Look over write set
+        if (FD_ISSET(sock, &write_set)) {
+            c = s->clients[sock];
+            if (c != NULL) {
+                respond_to_client(s, c);
+            }
+        }
+
+        // Prune clients that are not communicating
+        if ((c = s->clients[sock]) != NULL) {
+            if (now - c->last_communication > KEEP_ALIVE_TIMEOUT) {
+                remove_client(s, c);
+            }
+        }
+
     }
 }
 
