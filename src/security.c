@@ -12,7 +12,7 @@ SSL_CTX* ssl_create_ctx() {
 
     OpenSSL_add_all_algorithms();
     SSL_load_error_strings();
-    ctx = SSL_CTX_new(SSLv3_server_method());
+    ctx = SSL_CTX_new(TLSv1_2_server_method());
 
     if (ctx == NULL) {
         ssl_panic("Could not initialize SSL_CTX");
