@@ -174,7 +174,7 @@ void read_config_file(struct config *con, char *filename) {
 
     name = value = NULL;
 
-	if(NULL == (fp = fopen(filename, "r"))) {
+	if (NULL == (fp = fopen(filename, "r"))) {
 		panic("Could not open config file");
 	}
 

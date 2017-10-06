@@ -87,6 +87,11 @@ void init_settings(int argc, char *argv[]) {
     read_command_line(conf, argc, argv);
 
     // Read config file
+    if ((settings.config_file == NULL) || strlen(settings.config_file) == 0) {
+        puts("You must specify a config file with the -c or --config option.\n");
+        print_usage();
+        exit(0);
+    }
     read_config_file(conf, settings.config_file);
 
     // Read command line options again to overwrite config file values
