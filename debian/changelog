@@ -1,3 +1,11 @@
+hawkeye (0.6) stable; urgency=low
+
+  * Critical bug fix: No loger sending the same frame multiple times
+  * Security fix: using TLS 1.2 and a secure cipher suite
+  * Bug fix: not erroring out when config file is not specified
+
+ -- Igor Partola <igor@igorpartola.com>  Fri, 06 Oct 2017 11:11:00 -0400
+
 hawkeye (0.5) stable; urgency=low
 
   * Bug fix: CORS header for all responses
