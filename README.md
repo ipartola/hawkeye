@@ -28,7 +28,7 @@ If you want to roll your own .deb package:
     sudo apt-get install build-essential debhelper libv4l-dev libjpeg8-dev libssl-dev git devscripts
     git clone https://github.com/ipartola/hawkeye.git
     cd hawkeye/
-    debuild
+    debuild --no-sign
     cd ..
 
 ## Configuration
