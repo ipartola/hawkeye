@@ -2,7 +2,7 @@
 
 Hawkeye is a simple, robust, easy to use USB webcam streaming web server which uses MJPEG as the video codec. It is designed to be usable on local networks as well as the Internet, supporting HTTPS and Basic Authentication. It comes with an HTML video stream viewer optimized for desktop and mobile usage. Lastly, Hawkeye supports multiple webcams.
 
-Hawkeye was built to work on low power devices such as the Raspberry Pi but will work equally well on desktops and laptops alike.
+Hawkeye was built to work on low power devices such as the Raspberry Pi but will work equally well on desktops and laptops alike. The motivation for it was to create a standard no-surprises daemon with batteries included that would pipe (buffered) MJPEG data from the USB webcam(s) to an HTTP or HTTPS connection with as few delays as possible. The project is similar to, and borrows some code from, mjpeg-streamer but aside from the encoding bits is a separate pure C implementation. This project also includes everything you might need to build a Debian-style package to have hawkeye neatly integrated into your Debian-derived OS, from init files, to dependencies, to log rotation.
 
 ## Installation
 
@@ -17,7 +17,7 @@ If you already have a webcam connected, Hawkeye will start listening on localhos
 
 If you want to build Hawkeye from source:
 
-    sudo apt-get install build-essential debhelper libv4l-dev libjpeg8-dev libssl-dev git
+    sudo apt-get install build-essential debhelper libv4l-dev libjpeg9-dev libssl-dev git
     git clone https://github.com/ipartola/hawkeye.git
     cd hawkeye/
     make
@@ -25,10 +25,10 @@ If you want to build Hawkeye from source:
 
 If you want to roll your own .deb package:
 
-    sudo apt-get install build-essential debhelper libv4l-dev libjpeg8-dev libssl-dev git devscripts
+    sudo apt-get install build-essential debhelper libv4l-dev libjpeg9-dev libssl-dev git devscripts
     git clone https://github.com/ipartola/hawkeye.git
     cd hawkeye/
-    debuild --no-sign
+    debuild -us -uc -I
     cd ..
 
 ## Configuration

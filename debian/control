@@ -2,11 +2,12 @@ Source: hawkeye
 Maintainer: Igor Partola <igor@igorpartola.com>
 Section: admin
 Priority: optional
-Build-Depends: debhelper, libv4l-dev, libjpeg9-dev, libssl-dev, dpkg-dev (>= 1.16.1~)
-Standards-Version: 3.9.5
+Build-Depends: debhelper, debhelper-compat (= 13), libv4l-dev, libjpeg9-dev, libssl-dev, dpkg-dev (>= 1.16.1~)
+Standards-Version: 4.3.0
 
 Package: hawkeye
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, libv4l-0, libjpeg9, libssl1.1, logrotate
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}, libv4l-0, libjpeg9, libssl1.1, logrotate, lsb-base
 Description: USB webcam streaming server
  An simple and fast USB webcam MJPEG streaming server.

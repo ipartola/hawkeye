@@ -1,3 +1,11 @@
+hawkeye (0.7) stable; urgency=high
+
+  * Updating dependencies to libjpeg-9 and libssl1.1. Thank you gnmerritt!
+  * Security fix: using latest default TLS version
+  * Updated Debian packaging files to fix some of the lintian errors/warnings.
+
+ -- Igor Partola <igor@igorpartola.com>  Tue, 22 Dec 2020 18:56:17 -0400
+
 hawkeye (0.6) stable; urgency=low
 
   * Critical bug fix: No loger sending the same frame multiple times
